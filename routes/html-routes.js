@@ -1,19 +1,23 @@
-var path = require("path");
 var axios = require("axios");
 var cheerio = require("cheerio");
 
 var db = require("./../models");
 
 module.exports = function(app) {
+
     app.get("/", (req, res) => {
     scrape.then(result => {
-        var hbsObject = {
-            stories: result
-        }
-        console.log(hbsObject)
+      let hbsObject = {}
+      db.Article.find({})
+      .populate("notes")
+      .then(populated => {
+        hbsObject.stories = populated
         res.render("index", hbsObject)
-    })
+      })
+    });
 });
+
+};
 
 var scrape = new Promise((resolve, reject) => {
     axios.get("https://www.hearthpwn.com/").then(function(response) {
@@ -31,9 +35,16 @@ var scrape = new Promise((resolve, reject) => {
           result.summary = summary;
           result.url = url
           respArr.push(result)
+
+          db.Article.create(result)
+          .then(function(dbArticle) {
+            console.log(dbArticle);
+          })
+          .catch(function(err) {
+            console.log(err);
+          });
         });
         if (respArr) resolve(respArr)
         else reject("Error")
     });
 })
-};

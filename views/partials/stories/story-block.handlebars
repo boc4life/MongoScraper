@@ -1,9 +1,5 @@
 <li>
-	<h3>{{title}}</h3>
-
-	{{!-- <button class="change-sleep" data-id="{{id}}" data-newsleep="{{sleep}}">
-		{{#if sleep}}SLEEP TIME!{{else}}WAKE UP!{{/if}}
-	</button>
-
-	<button class="delete-cat" data-id="{{this.id}}">DELETE!</button> --}}
+	<a href={{url}}><h3>{{title}}</h3></a>
+	<p class="summary">{{summary}}</p>
+	<button class="btn btn-primary commentBtn" data-id={{_id}}>View Comments ({{notes.length}})</button>
 </li>

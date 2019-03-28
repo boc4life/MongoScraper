@@ -1,0 +1,12 @@
+li {
+    margin-bottom: .5rem;
+}
+
+#commentContainer {
+    height: 600px;
+    border: 1px solid black;
+}
+
+#addComment {
+    border: 1px solid black;
+}
