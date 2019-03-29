@@ -6,7 +6,8 @@ var db = require("./../models");
 module.exports = function(app) {
 
     app.get("/", (req, res) => {
-    scrape.then(result => {
+    scrape().then(result => {
+      console.log(result)
       let hbsObject = {}
       db.Article.find().sort({_id:1}).limit(20)
       .populate("notes")
@@ -19,7 +20,8 @@ module.exports = function(app) {
 
 };
 
-var scrape = new Promise((resolve, reject) => {
+function scrape() {
+  return new Promise((resolve, reject) => {
     axios.get("https://www.hearthpwn.com/").then(function(response) {
         var respArr = [];
 
@@ -48,3 +50,4 @@ var scrape = new Promise((resolve, reject) => {
         else reject("Error")
     });
 })
+}
