@@ -9,7 +9,7 @@ module.exports = function(app) {
     scrape().then(result => {
       console.log(result)
       let hbsObject = {}
-      db.Article.find().sort({_id:1}).limit(20)
+      db.Article.find().sort({_id:-1}).limit(20)
       .populate("notes")
       .then(populated => {
         hbsObject.stories = populated
