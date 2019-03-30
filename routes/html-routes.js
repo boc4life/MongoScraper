@@ -7,7 +7,7 @@ module.exports = function(app) {
 
     app.get("/", (req, res) => {
     scrape().then(result => {
-      console.log(result)
+      console.log("rendering")
       let hbsObject = {}
       db.Article.find().sort({_id:-1}).limit(20)
       .populate("notes")
@@ -24,6 +24,7 @@ function scrape() {
   return new Promise((resolve, reject) => {
     axios.get("https://www.hearthpwn.com/").then(function(response) {
         var respArr = [];
+        var promiseArr = [];
 
         var $ = cheerio.load(response.data);
     
@@ -38,16 +39,22 @@ function scrape() {
           result.url = url
           respArr.push(result)
 
-          db.Article.create(result)
-          .then(function(dbArticle) {
-            console.log(dbArticle);
-          })
-          .catch(function(err) {
-            console.log(err);
-          });
+          promiseArr.push(new Promise(function(resolve, reject) {
+            db.Article.create(result)
+            .then(function(dbArticle) {
+              console.log("dbArticle");
+              resolve("resolve")
+            })
+            .catch(function(err) {
+              console.log("err");
+              resolve("resolve")
+            });
+          }))
         });
-        if (respArr) resolve(respArr)
-        else reject("Error")
+        Promise.all(promiseArr).then(() => {
+          if (respArr) resolve(respArr)
+          else reject(respArr)
+        })
     });
 })
 }
